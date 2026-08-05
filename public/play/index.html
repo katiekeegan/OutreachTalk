@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="An interactive museum presentation about how training data shapes autoregressive language models." name="description"/>
+<title>What Will the Model Say Next?</title>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<a class="skip-link" href="#slides">Skip to presentation</a>
+<header aria-label="Presentation controls" class="topbar">
+<div class="brand">
+<span aria-hidden="true" class="brand-mark">∑</span>
+<span>MoMath Talk · Audience Lab</span>
+</div>
+<div class="topbar-actions">
+<button aria-pressed="false" class="icon-button" id="notesToggle" title="Toggle presenter notes" type="button">Notes</button>
+<span class="exercise-status-badge exercise-open" hidden="" id="exerciseStatusBadge">Exercise open</span>
+<button aria-pressed="true" class="icon-button" id="audienceToggle" title="Show or hide the audience QR panel" type="button">Audience QR</button>
+<button class="icon-button" id="fullscreenButton" title="Enter fullscreen" type="button">Fullscreen</button>
+<span aria-live="polite" class="slide-counter" id="slideCounter">1 / 10</span>
+</div>
+</header>
+<aside aria-label="Audience participation link" aria-live="polite" class="audience-dock" id="audienceDock">
+<p class="audience-dock-kicker" id="audienceDockKicker">Audience activity</p>
+<h2 class="audience-dock-title" id="audienceDockTitle">Join the live dataset exercise</h2>
+<img alt="QR code for the audience activity" height="220" id="audienceQrImage" src="../assets/qr/placeholder.png" width="220"/>
+<div class="audience-code-row" hidden="" id="audienceCodeRow">
+<span>Enter code</span>
+<strong id="audienceCode">7316</strong>
+</div>
+<p class="audience-dock-copy" id="audienceDockCopy">Scan once and keep the page open. Phones are optional.</p>
+<p class="audience-short-url" id="audienceShortUrl">Loading current address…</p>
+</aside>
+<main aria-live="polite" class="slides" id="slides">
+<section aria-labelledby="slide-1-title" class="slide active" data-title="Opening">
+<div class="hero-grid">
+<div>
+<p class="eyebrow">National Museum of Mathematics outreach talk</p>
+<h1 id="slide-1-title">What will the model say <em>next?</em></h1>
+<p class="lede">A language model is a probability machine. Change the examples it learns from, and you change the future it predicts.</p>
+<div class="prompt-card audience-card">
+<span class="prompt-label">Audience warm-up</span>
+<p class="giant-prompt">“Once upon a…”</p>
+<div class="choice-row" id="openingChoices">
+<button data-choice="time" type="button">time</button>
+<button data-choice="triangle" type="button">triangle</button>
+<button data-choice="sandwich" type="button">sandwich</button>
+</div>
+<p aria-live="polite" class="response-line" id="openingResponse">Vote before revealing the model’s favorite.</p>
+</div>
+</div>
+<div aria-label="Decorative probability visualization" class="probability-sculpture">
+<div class="orbit orbit-a"><span>time</span></div>
+<div class="orbit orbit-b"><span>day</span></div>
+<div class="orbit orbit-c"><span>triangle</span></div>
+<div class="core">P(next word)</div>
+</div>
+</div>
+<aside class="speaker-notes"><strong>Opening:</strong> Ask for a show of hands. The point is not that “time” is logically forced; it is culturally frequent in stories. Predictions begin with patterns in data.</aside>
+</section>
+<section aria-labelledby="slide-2-title" class="slide" data-title="Autoregression">
+<p class="eyebrow">The basic loop</p>
+<h2 id="slide-2-title">One word at a time</h2>
+<div aria-label="Autoregressive generation steps" class="step-flow">
+<div class="step-card"><span class="step-number">1</span><strong>Read context</strong><code>The museum is</code></div>
+<div aria-hidden="true" class="flow-arrow">→</div>
+<div class="step-card"><span class="step-number">2</span><strong>Score possibilities</strong><code>open 42% · full 23% · …</code></div>
+<div aria-hidden="true" class="flow-arrow">→</div>
+<div class="step-card"><span class="step-number">3</span><strong>Choose a token</strong><code>open</code></div>
+<div aria-hidden="true" class="flow-arrow">→</div>
+<div class="step-card"><span class="step-number">4</span><strong>Repeat</strong><code>The museum is open …</code></div>
+</div>
+<div class="equation-card">
+<span class="equation">P(text) = ∏ P(next token | earlier tokens)</span>
+<p>“Autoregressive” means the model uses its own growing output as the next input.</p>
+</div>
+<div class="callout">The model does not retrieve one memorized answer. It repeatedly chooses from a distribution.</div>
+<aside class="speaker-notes"><strong>Demo idea:</strong> Have four volunteers hold cards: context, probabilities, chosen word, new context. Walk the loop physically.</aside>
+</section>
+<section aria-labelledby="slide-3-title" class="slide" data-title="Tiny model demo">
+<p class="eyebrow">Hands-on model</p>
+<h2 id="slide-3-title">Explore a tiny next-word predictor</h2>
+
+<div class="callout model-demo-intro">
+  Start with prepared datasets. Change the recipe, prompt, memory, and temperature to see which part of the behavior moves.
+</div><div class="lab-grid">
+<div class="panel">
+<label for="corpusPreset">Training-data recipe</label>
+<select id="corpusPreset">
+<option value="story">Story world</option>
+<option value="math">Math world</option>
+<option value="space">Space world</option>
+<option value="mixed">Balanced mixture</option>
+</select>
+<label for="trainingData">Editable training text</label>
+<textarea id="trainingData" rows="12" spellcheck="false"></textarea>
+<div class="button-row">
+<button class="primary" id="trainButton" type="button">Train model</button>
+<button id="resetCorpus" type="button">Reset</button>
+</div>
+<p aria-live="polite" class="microcopy" id="trainingStats"></p>
+</div>
+<div class="panel output-panel">
+<label for="predictionPrompt">Prompt</label>
+<input autocomplete="off" id="predictionPrompt" value="once upon a"/>
+<div class="control-row">
+<label for="ngramOrder">Memory: <span id="ngramValue">2</span> previous words</label>
+<input id="ngramOrder" max="4" min="1" step="1" type="range" value="2"/>
+</div>
+<div class="control-row">
+<label for="temperature">Temperature: <span id="temperatureValue">0.8</span></label>
+<input id="temperature" max="2" min="0.2" step="0.1" type="range" value="0.8"/>
+</div>
+<h3>Next-word probabilities</h3>
+<div aria-live="polite" class="prediction-bars" id="predictionBars"></div>
+<div class="button-row">
+<button class="primary" id="generateButton" type="button">Generate 12 words</button>
+<button id="clearGeneration" type="button">Clear</button>
+</div>
+<div class="generated-text" id="generatedText">Your continuation will appear here.</div>
+</div>
+</div>
+<aside class="speaker-notes"><strong>Prepared-data demo:</strong> Compare story, math, space, and mixed corpora. Save the audience-built dataset for the final capstone, after visitors have learned what frequency, coverage, representation, context, and sampling do.</aside>
+</section>
+<section aria-labelledby="slide-4-title" class="slide" data-audience-activity="frequency" data-audience-code="2049" data-audience-label="Change the frequencies" data-title="Data frequency">
+<p class="eyebrow">Experiment 1</p>
+<h2 id="slide-4-title">Frequency becomes probability</h2>
+<div class="experiment-grid">
+<div class="panel">
+<p class="experiment-prompt">After “the shape is”:</p>
+<div class="counter-control">
+<label>circle examples <output id="circleCountOutput">8</output></label>
+<input id="circleCount" max="20" min="0" type="range" value="8"/>
+</div>
+<div class="counter-control">
+<label>triangle examples <output id="triangleCountOutput">4</output></label>
+<input id="triangleCount" max="20" min="0" type="range" value="4"/>
+</div>
+<div class="counter-control">
+<label>square examples <output id="squareCountOutput">2</output></label>
+<input id="squareCount" max="20" min="0" type="range" value="2"/>
+</div>
+<button class="primary" id="balanceButton" type="button">Balance the dataset</button>
+</div>
+<div class="panel">
+<h3>Learned distribution</h3>
+<div class="big-bars" id="frequencyChart"></div>
+<p class="takeaway" id="frequencyTakeaway"></p>
+</div>
+</div>
+<div class="callout">More examples usually mean more probability—unless model design, context, or data quality changes the pattern.</div>
+<aside class="speaker-notes"><strong>Audience move:</strong> Ask someone to “program” the model by moving sliders. They are programming with examples, not explicit rules.</aside>
+</section>
+<section aria-labelledby="slide-5-title" class="slide" data-audience-activity="coverage" data-audience-code="5827" data-audience-label="Change the training shelf" data-title="Missing data">
+<p class="eyebrow">Experiment 2</p>
+<h2 id="slide-5-title">A model cannot learn examples it never sees</h2>
+<div class="split-demo">
+<div class="panel data-bin">
+<h3>Training shelf</h3>
+<label class="check-card"><input checked="" data-book="circle" type="checkbox"/> Books about circles</label>
+<label class="check-card"><input checked="" data-book="triangle" type="checkbox"/> Books about triangles</label>
+<label class="check-card"><input data-book="fractal" type="checkbox"/> Books about fractals</label>
+<label class="check-card"><input data-book="topology" type="checkbox"/> Books about topology</label>
+</div>
+<div class="panel question-panel">
+<p class="experiment-prompt">Prompt: “A Möbius strip has…”</p>
+<button class="primary" id="coverageTest" type="button">Ask the model</button>
+<div class="coverage-result" id="coverageResult">Select the shelf, then test.</div>
+</div>
+</div>
+<div class="two-column-notes">
+<div><strong>Coverage</strong><p>Did the dataset contain the topic, language, style, or situation?</p></div>
+<div><strong>Quality</strong><p>Were the examples accurate, clear, diverse, and appropriately labeled?</p></div>
+</div>
+<aside class="speaker-notes"><strong>Clarify:</strong> Large datasets can still have holes. “More data” and “the right data” are different goals.</aside>
+</section>
+<section aria-labelledby="slide-6-title" class="slide" data-audience-activity="representation" data-audience-code="4183" data-audience-label="Change representation" data-title="Bias">
+<p class="eyebrow">Experiment 3</p>
+<h2 id="slide-6-title">Skewed examples create skewed associations</h2>
+<div class="bias-demo">
+<div class="panel">
+<p class="experiment-prompt">Toy training sentence:</p>
+<code class="toy-sentence">“The scientist said <span id="pronounToken">he</span> discovered a pattern.”</code>
+<label for="representationSlider">Share using “she” <output id="representationOutput">20%</output></label>
+<input id="representationSlider" max="100" min="0" type="range" value="20"/>
+<div aria-label="Representation in toy dataset" class="dataset-dots" id="datasetDots"></div>
+</div>
+<div class="panel">
+<h3>Prediction after “the scientist said”</h3>
+<div class="big-bars" id="biasChart"></div>
+<p class="takeaway">This toy model is not discovering who scientists are. It is reflecting which sentence patterns were repeated.</p>
+</div>
+</div>
+<div class="warning-callout"><strong>Important:</strong> Real bias is more complicated than one slider. It can enter through selection, labeling, historical inequity, filtering, objectives, and deployment choices.</div>
+<aside class="speaker-notes"><strong>Frame carefully:</strong> The goal is not to claim every output is a direct count. The toy example isolates one mechanism: uneven representation.</aside>
+</section>
+<section aria-labelledby="slide-7-title" class="slide" data-audience-activity="context" data-audience-code="9672" data-audience-label="Switch training worlds" data-title="Context and shift">
+<p class="eyebrow">Experiment 4</p>
+<h2 id="slide-7-title">The same word can live in different worlds</h2>
+<div aria-label="Choose training world" class="world-switcher" role="group">
+<button class="world active" data-world="geometry" type="button">Geometry data</button>
+<button class="world" data-world="music" type="button">Music data</button>
+<button class="world" data-world="travel" type="button">Travel data</button>
+</div>
+<div class="context-stage">
+<div class="context-prompt">Prompt: “The next <strong>plane</strong> is…”</div>
+<div class="prediction-cloud" id="worldPredictions"></div>
+</div>
+<div class="definition-grid">
+<div><span>Training distribution</span><p>The kinds of examples the model saw.</p></div>
+<div><span>Deployment distribution</span><p>The situations where people actually use it.</p></div>
+<div><span>Distribution shift</span><p>When those worlds do not match.</p></div>
+</div>
+<aside class="speaker-notes"><strong>Ask:</strong> In geometry, what does “plane” mean? In travel? A model needs context and suitable training coverage to disambiguate.</aside>
+</section>
+<section aria-labelledby="slide-8-title" class="slide" data-audience-activity="temperature" data-audience-code="3506" data-audience-label="Change temperature" data-title="Sampling">
+<p class="eyebrow">Experiment 5</p>
+<h2 id="slide-8-title">Training data shapes the menu; sampling chooses the meal</h2>
+<div class="sampling-grid">
+<div class="panel">
+<label for="samplingTemperature">Temperature <output id="samplingTempOutput">0.7</output></label>
+<input id="samplingTemperature" max="2" min="0.1" step="0.1" type="range" value="0.7"/>
+<button class="primary" id="resampleButton" type="button">Sample 8 times</button>
+<p class="microcopy">Low temperature favors likely words. High temperature flattens the distribution and increases variety.</p>
+</div>
+<div class="panel">
+<p class="experiment-prompt">After “math can be”:</p>
+<div class="sample-results" id="sampleResults"></div>
+</div>
+</div>
+<div class="callout">Changing temperature does not add knowledge. It changes how boldly the model samples from what it learned.</div>
+<aside class="speaker-notes"><strong>Analogy:</strong> Training data writes the restaurant menu. Temperature changes whether you always order the bestseller or try something unusual.</aside>
+</section>
+<section aria-labelledby="slide-9-title" class="slide" data-audience-activity="challenge" data-audience-code="6241" data-audience-label="Solve the final challenge" data-title="Dataset challenge">
+<p class="eyebrow">Dataset-reading challenge</p>
+<h2 id="slide-9-title">Can you reverse-engineer the dataset?</h2>
+<div class="mystery-grid">
+<div class="panel mystery-output">
+<p class="experiment-prompt">Mystery model prompt: “The museum is…”</p>
+<div class="mystery-predictions">
+<span style="--p: 72%">magical <small>72%</small></span>
+<span style="--p: 17%">quiet <small>17%</small></span>
+<span style="--p: 8%">open <small>8%</small></span>
+<span style="--p: 3%">square <small>3%</small></span>
+</div>
+</div>
+<div class="panel">
+<h3>Which training set is most plausible?</h3>
+<div class="quiz-options" id="mysteryQuiz">
+<button data-answer="hours" type="button">Visitor-hours listings</button>
+<button data-answer="reviews" type="button">Enthusiastic visitor reviews</button>
+<button data-answer="geometry" type="button">Geometry textbooks</button>
+</div>
+<p aria-live="polite" class="response-line" id="mysteryFeedback">Choose the evidence that best explains the probabilities.</p>
+</div>
+</div>
+
+
+<aside class="speaker-notes"><strong>Bridge to the capstone:</strong> Once the audience identifies the likely source data, tell them they now get to create a dataset themselves and inspect the prediction it produces.</aside>
+</section><section aria-labelledby="slide-10-title" class="slide capstone-slide" data-audience-activity="live-dataset" data-audience-label="Build the final training dataset" data-title="Audience capstone">
+<p class="eyebrow">Final audience capstone</p>
+<h2 id="slide-10-title">Now you build the training data</h2>
+<p class="lede capstone-lede">Submit examples, moderate them, and watch the approved dataset change what the tiny model predicts.</p>
+<div class="capstone-grid">
+<section aria-labelledby="liveDatasetTitle" class="live-exercise-panel">
+<div class="live-exercise-heading">
+<div>
+<p class="eyebrow">Audience-built dataset</p>
+<h3 id="liveDatasetTitle">Approved examples enter the model live.</h3>
+</div>
+<span class="live-status open" id="liveExerciseBadge">Open</span>
+</div>
+<div aria-label="Live submission counts" class="live-metrics">
+<div><strong id="livePendingCount">0</strong><span>pending</span></div>
+<div><strong id="liveApprovedCount">0</strong><span>approved</span></div>
+<div><strong id="liveRejectedCount">0</strong><span>rejected</span></div>
+</div>
+<div class="live-finalized-banner" hidden="" id="finalizedBanner">
+<strong>Dataset finalized.</strong> New audience submissions are locked. Moderators can still resolve examples already pending.
+        </div>
+<div aria-live="polite" class="approved-dataset-list" id="approvedDatasetList"></div>
+<div class="button-row live-actions">
+<button class="primary" id="useApprovedDataset" type="button">Use approved examples</button>
+<button id="facilitatorAuthButton" type="button">Staff sign in</button>
+<button hidden="" id="finalizeExerciseButton" type="button">Finalize submissions</button>
+<button hidden="" id="reopenExerciseButton" type="button">Reopen submissions</button>
+</div>
+<div class="facilitator-auth-panel" hidden="" id="facilitatorAuthPanel">
+<label for="facilitatorPasscode">Facilitator passcode</label>
+<div class="facilitator-auth-row">
+<input autocomplete="current-password" id="facilitatorPasscode" type="password"/>
+<button class="primary" id="facilitatorLoginButton" type="button">Unlock controls</button>
+</div>
+<p aria-live="polite" class="microcopy" id="facilitatorAuthFeedback"></p>
+</div>
+<details class="exercise-admin">
+<summary>Rehearsal controls</summary>
+<p>Reset clears every submission and reopens the exercise.</p>
+<button class="danger-outline" hidden="" id="resetExerciseButton" type="button">Reset exercise</button>
+</details>
+</section>
+<section aria-labelledby="capstoneModelTitle" class="panel capstone-model-panel">
+<p class="eyebrow">Audience-trained model</p>
+<h3 id="capstoneModelTitle">What did our examples teach?</h3>
+<label for="capstonePrompt">Test prompt</label>
+<input autocomplete="off" id="capstonePrompt" value="the museum is"/>
+<div class="button-row">
+<button class="primary" id="runAudienceModelButton" type="button">Run audience model</button>
+</div>
+<p aria-live="polite" class="microcopy" id="capstoneDatasetStats">Approve examples, then load them into the model.</p>
+<h3 class="capstone-output-title">Next-word probabilities</h3>
+<div aria-live="polite" class="prediction-bars capstone-prediction-bars" id="capstonePredictionBars">
+<p class="microcopy">The audience-trained result will appear here.</p>
+</div>
+<div class="generated-text" id="capstoneGeneratedText">The generated continuation will appear here.</div>
+</section>
+</div>
+<div class="final-takeaways">
+<div><span>1</span><p>Models learn statistical patterns from examples.</p></div>
+<div><span>2</span><p>Frequency, coverage, quality, and balance all matter.</p></div>
+<div><span>3</span><p>Outputs are clues about data—not proof of understanding.</p></div>
+</div>
+<p class="closing-line">To change a model’s future, examine the data that shaped its past.</p>
+<aside class="speaker-notes"><strong>Finale:</strong> Reveal the QR now. Let the moderator approve a focused set, select “Use approved examples,” test several prompts, and finalize when the dataset is ready. Close by connecting the result back to the examples the room supplied.</aside>
+</section>
+</main>
+<nav aria-label="Slide navigation" class="deck-nav">
+<button aria-label="Previous slide" id="prevButton" type="button">←</button>
+<div aria-hidden="true" class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+<button aria-label="Next slide" id="nextButton" type="button">→</button>
+</nav>
+<script src="../vendor/qr-svg.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+</body>
+</html>
