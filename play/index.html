@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Audience activities for the MoMath Training Data Lab talk." />
+  <meta name="robots" content="noindex" />
+  <title>Audience Lab · Training Data</title>
+  <link rel="stylesheet" href="play.css" />
+</head>
+<body>
+  <header class="play-header">
+    <a class="play-brand" href="./" aria-label="Return to the audience waiting room">
+      <span aria-hidden="true">∑</span>
+      <strong>Training Data Lab</strong>
+    </a>
+    <span class="live-badge">MoMath audience activity</span>
+  </header>
+
+  <main class="play-shell">
+    <section id="waitingScreen" class="waiting-screen" aria-labelledby="waitingTitle">
+      <p class="eyebrow">Keep this page open</p>
+      <h1 id="waitingTitle">Waiting for the next activity</h1>
+      <p class="lede">The presenter will show a four-digit code when it is time to participate. There is no activity list, so everyone stays with the talk.</p>
+
+      <div class="code-card">
+        <label for="activityCode">Activity code</label>
+        <input id="activityCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]*" placeholder="••••" aria-describedby="codeHelp" />
+        <button id="unlockButton" class="primary" type="button">Open activity</button>
+        <p id="codeHelp">Enter the code visible on the main screen, or scan that slide’s QR code.</p>
+        <p id="codeFeedback" class="feedback" aria-live="polite"></p>
+      </div>
+
+      <div class="quiet-option">
+        <strong>Phones are optional.</strong>
+        <p>You can follow every experiment on the main screen without entering anything here.</p>
+      </div>
+    </section>
+
+    <section id="activityScreen" class="activity-screen" hidden aria-live="polite">
+      <div class="activity-toolbar">
+        <div>
+          <p class="eyebrow" id="activityKicker">Live activity</p>
+          <h1 id="activityTitle">Activity</h1>
+        </div>
+        <button id="leaveActivity" class="secondary" type="button">Waiting room</button>
+      </div>
+      <p id="activityGoal" class="activity-goal"></p>
+      <div id="activityMount"></div>
+      <div class="finished-card">
+        <strong>Finished?</strong>
+        <p>Compare what happened with someone nearby, then keep this page open. The next activity needs a new code.</p>
+        <button id="finishedButton" class="secondary" type="button">Return to waiting room</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>All calculations run locally in your browser. No responses are collected.</footer>
+  <script src="play.js"></script>
+</body>
+</html>
