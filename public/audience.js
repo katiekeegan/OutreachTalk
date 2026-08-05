@@ -14,6 +14,7 @@ const finalizedNotice = document.getElementById("finalizedNotice");
 const approvedCount = document.getElementById("approvedCount");
 const characterCount = document.getElementById("characterCount");
 let finalized = false;
+let refreshInFlight = false;
 
 function getParticipantId() {
   let id = localStorage.getItem(participantStorageKey);
@@ -69,6 +70,8 @@ function renderMine(submissions) {
 }
 
 async function refresh() {
+  if (refreshInFlight) return;
+  refreshInFlight = true;
   try {
     const [state, mine] = await Promise.all([
       api("/state", { headers: {} }),
@@ -78,6 +81,8 @@ async function refresh() {
     renderMine(mine.submissions || []);
   } catch (error) {
     feedback.textContent = error.message;
+  } finally {
+    refreshInFlight = false;
   }
 }
 
@@ -115,13 +120,9 @@ textInput.addEventListener("keydown", event => {
   if ((event.ctrlKey || event.metaKey) && event.key === "Enter") submit();
 });
 
-const events = new EventSource(`${API_BASE}/events`);
-events.addEventListener("state", event => {
-  try {
-    applyState(JSON.parse(event.data));
-    refresh();
-  } catch { /* ignore malformed event */ }
-});
-events.onerror = () => { feedback.textContent = "Reconnecting to the live exercise…"; };
+const refreshTimer = window.setInterval(refresh, 2500);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+window.addEventListener("focus", refresh);
+window.addEventListener("pagehide", () => window.clearInterval(refreshTimer), { once: true });
 
 refresh();

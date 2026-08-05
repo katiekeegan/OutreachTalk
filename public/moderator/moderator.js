@@ -11,6 +11,7 @@ const pendingList = document.getElementById("pendingList");
 const historyList = document.getElementById("historyList");
 const exerciseBadge = document.getElementById("exerciseBadge");
 let authenticated = false;
+let refreshInFlight = false;
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
@@ -88,12 +89,15 @@ function render(data) {
 }
 
 async function refresh() {
-  if (!authenticated) return;
+  if (!authenticated || refreshInFlight) return;
+  refreshInFlight = true;
   try {
     render(await api("/moderator/submissions", { headers: {} }));
   } catch (error) {
     if (error.status === 401) return showLogin("Your moderator session expired.");
     pendingList.innerHTML = `<div class="notice notice-danger">${escapeHtml(error.message)}</div>`;
+  } finally {
+    refreshInFlight = false;
   }
 }
 
@@ -140,8 +144,10 @@ logoutButton.addEventListener("click", async () => {
   showLogin("Logged out.");
 });
 
-const events = new EventSource(`${API_BASE}/events`);
-events.addEventListener("state", () => refresh());
+const refreshTimer = window.setInterval(refresh, 2000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+window.addEventListener("focus", refresh);
+window.addEventListener("pagehide", () => window.clearInterval(refreshTimer), { once: true });
 
 api("/auth", { headers: {} })
   .then(status => {

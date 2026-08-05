@@ -406,10 +406,18 @@ const renderers = {
 
 function startFromUrl() {
   const params = new URLSearchParams(window.location.search);
+  const code = (params.get("code") || "").replace(/\D/g, "");
+  const codeMatch = Object.entries(ACCESS).find(([, item]) => item.code === code);
+  if (codeMatch) {
+    openActivity(codeMatch[0], false);
+    return;
+  }
+
+  // Backward-compatible support for previously generated activity links.
   const name = params.get("a");
   const token = params.get("k");
   if (name && ACCESS[name]?.token === token) openActivity(name, false);
-  else showWaiting(name || token ? "That activity link is not valid. Use the code on the main screen." : "");
+  else showWaiting(code || name || token ? "That activity link is not valid. Use the code on the main screen." : "");
 }
 
 window.addEventListener("popstate", startFromUrl);

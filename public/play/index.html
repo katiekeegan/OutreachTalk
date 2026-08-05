@@ -27,17 +27,17 @@
   <aside class="audience-dock" id="audienceDock" aria-live="polite" aria-label="Audience participation link">
     <p class="audience-dock-kicker" id="audienceDockKicker">Audience activity</p>
     <h2 class="audience-dock-title" id="audienceDockTitle">Join the live dataset exercise</h2>
-    <img id="audienceQrImage" src="../assets/qr/audience.png" alt="QR code for the audience activity" width="220" height="220" />
+    <img id="audienceQrImage" src="../assets/qr/placeholder.png" alt="QR code for the audience activity" width="220" height="220" />
     <div class="audience-code-row" id="audienceCodeRow" hidden>
       <span>Enter code</span>
       <strong id="audienceCode">7316</strong>
     </div>
     <p class="audience-dock-copy" id="audienceDockCopy">Scan once and keep the page open. Phones are optional.</p>
-    <p class="audience-short-url" id="audienceShortUrl">katiekeegan.org/OutreachTalk</p>
+    <p class="audience-short-url" id="audienceShortUrl">Loading current address…</p>
   </aside>
 
   <main id="slides" class="slides" aria-live="polite">
-    <section class="slide active" data-title="Opening" data-audience-activity="join" data-audience-label="Join the live dataset exercise" data-audience-qr="../assets/qr/audience.png" data-audience-short-url="katiekeegan.org/OutreachTalk" aria-labelledby="slide-1-title">
+    <section class="slide active" data-title="Opening" data-audience-activity="join" data-audience-label="Join the live dataset exercise" aria-labelledby="slide-1-title">
       <div class="hero-grid">
         <div>
           <p class="eyebrow">National Museum of Mathematics outreach talk</p>
@@ -84,7 +84,7 @@
       <aside class="speaker-notes"><strong>Demo idea:</strong> Have four volunteers hold cards: context, probabilities, chosen word, new context. Walk the loop physically.</aside>
     </section>
 
-    <section class="slide" data-title="Tiny model" data-audience-activity="live-dataset" data-audience-label="Submit a training example" data-audience-qr="../assets/qr/audience.png" data-audience-short-url="katiekeegan.org/OutreachTalk" aria-labelledby="slide-3-title">
+    <section class="slide" data-title="Tiny model" data-audience-activity="live-dataset" data-audience-label="Submit a training example" aria-labelledby="slide-3-title">
       <p class="eyebrow">Hands-on model</p>
       <h2 id="slide-3-title">Train a tiny next-word predictor</h2>
       <section class="live-exercise-panel" aria-labelledby="liveDatasetTitle">
@@ -166,7 +166,7 @@
       <aside class="speaker-notes"><strong>Key question:</strong> When the audience changes “story” data to “math” data, which predictions move? Emphasize that the algorithm stayed fixed.</aside>
     </section>
 
-    <section class="slide" data-title="Data frequency" data-audience-activity="frequency" data-audience-label="Change the frequencies" data-audience-code="2049" data-audience-qr="../assets/qr/frequency.png" data-audience-short-url="katiekeegan.org/OutreachTalk/lab" aria-labelledby="slide-4-title">
+    <section class="slide" data-title="Data frequency" data-audience-activity="frequency" data-audience-label="Change the frequencies" data-audience-code="2049" aria-labelledby="slide-4-title">
       <p class="eyebrow">Experiment 1</p>
       <h2 id="slide-4-title">Frequency becomes probability</h2>
       <div class="experiment-grid">
@@ -196,7 +196,7 @@
       <aside class="speaker-notes"><strong>Audience move:</strong> Ask someone to “program” the model by moving sliders. They are programming with examples, not explicit rules.</aside>
     </section>
 
-    <section class="slide" data-title="Missing data" data-audience-activity="coverage" data-audience-label="Change the training shelf" data-audience-code="5827" data-audience-qr="../assets/qr/coverage.png" data-audience-short-url="katiekeegan.org/OutreachTalk/lab" aria-labelledby="slide-5-title">
+    <section class="slide" data-title="Missing data" data-audience-activity="coverage" data-audience-label="Change the training shelf" data-audience-code="5827" aria-labelledby="slide-5-title">
       <p class="eyebrow">Experiment 2</p>
       <h2 id="slide-5-title">A model cannot learn examples it never sees</h2>
       <div class="split-demo">
@@ -220,7 +220,7 @@
       <aside class="speaker-notes"><strong>Clarify:</strong> Large datasets can still have holes. “More data” and “the right data” are different goals.</aside>
     </section>
 
-    <section class="slide" data-title="Bias" data-audience-activity="representation" data-audience-label="Change representation" data-audience-code="4183" data-audience-qr="../assets/qr/representation.png" data-audience-short-url="katiekeegan.org/OutreachTalk/lab" aria-labelledby="slide-6-title">
+    <section class="slide" data-title="Bias" data-audience-activity="representation" data-audience-label="Change representation" data-audience-code="4183" aria-labelledby="slide-6-title">
       <p class="eyebrow">Experiment 3</p>
       <h2 id="slide-6-title">Skewed examples create skewed associations</h2>
       <div class="bias-demo">
@@ -241,7 +241,7 @@
       <aside class="speaker-notes"><strong>Frame carefully:</strong> The goal is not to claim every output is a direct count. The toy example isolates one mechanism: uneven representation.</aside>
     </section>
 
-    <section class="slide" data-title="Context and shift" data-audience-activity="context" data-audience-label="Switch training worlds" data-audience-code="9672" data-audience-qr="../assets/qr/context.png" data-audience-short-url="katiekeegan.org/OutreachTalk/lab" aria-labelledby="slide-7-title">
+    <section class="slide" data-title="Context and shift" data-audience-activity="context" data-audience-label="Switch training worlds" data-audience-code="9672" aria-labelledby="slide-7-title">
       <p class="eyebrow">Experiment 4</p>
       <h2 id="slide-7-title">The same word can live in different worlds</h2>
       <div class="world-switcher" role="group" aria-label="Choose training world">
@@ -261,7 +261,7 @@
       <aside class="speaker-notes"><strong>Ask:</strong> In geometry, what does “plane” mean? In travel? A model needs context and suitable training coverage to disambiguate.</aside>
     </section>
 
-    <section class="slide" data-title="Sampling" data-audience-activity="temperature" data-audience-label="Change temperature" data-audience-code="3506" data-audience-qr="../assets/qr/temperature.png" data-audience-short-url="katiekeegan.org/OutreachTalk/lab" aria-labelledby="slide-8-title">
+    <section class="slide" data-title="Sampling" data-audience-activity="temperature" data-audience-label="Change temperature" data-audience-code="3506" aria-labelledby="slide-8-title">
       <p class="eyebrow">Experiment 5</p>
       <h2 id="slide-8-title">Training data shapes the menu; sampling chooses the meal</h2>
       <div class="sampling-grid">
@@ -280,7 +280,7 @@
       <aside class="speaker-notes"><strong>Analogy:</strong> Training data writes the restaurant menu. Temperature changes whether you always order the bestseller or try something unusual.</aside>
     </section>
 
-    <section class="slide" data-title="Final challenge" data-audience-activity="challenge" data-audience-label="Solve the final challenge" data-audience-code="6241" data-audience-qr="../assets/qr/challenge.png" data-audience-short-url="katiekeegan.org/OutreachTalk/lab" aria-labelledby="slide-9-title">
+    <section class="slide" data-title="Final challenge" data-audience-activity="challenge" data-audience-label="Solve the final challenge" data-audience-code="6241" aria-labelledby="slide-9-title">
       <p class="eyebrow">Final challenge</p>
       <h2 id="slide-9-title">Can you reverse-engineer the dataset?</h2>
       <div class="mystery-grid">
@@ -319,6 +319,7 @@
     <button id="nextButton" type="button" aria-label="Next slide">→</button>
   </nav>
 
+  <script src="../vendor/qr-svg.js"></script>
   <script src="app.js"></script>
   <script src="live.js"></script>
 </body>

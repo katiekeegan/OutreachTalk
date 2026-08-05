@@ -17,6 +17,7 @@ const reopenButton = document.getElementById("reopenExerciseButton");
 const resetButton = document.getElementById("resetExerciseButton");
 let liveState = { exercise: { finalized: false }, approved: [], counts: { pending: 0, approved: 0, rejected: 0 } };
 let staffRole = null;
+let liveRefreshInFlight = false;
 
 function escapeLiveHtml(value) {
   return String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
@@ -63,10 +64,14 @@ function renderLiveState(state) {
 }
 
 async function refreshLiveState() {
+  if (liveRefreshInFlight) return;
+  liveRefreshInFlight = true;
   try {
     renderLiveState(await liveApi("/state", { headers: {} }));
   } catch (error) {
     approvedDatasetList.innerHTML = `<div class="approved-empty">${escapeLiveHtml(error.message)}</div>`;
+  } finally {
+    liveRefreshInFlight = false;
   }
 }
 
@@ -165,10 +170,10 @@ reopenButton.addEventListener("click", reopenExercise);
 resetButton.addEventListener("click", resetExercise);
 useApprovedDataset.addEventListener("click", loadApprovedIntoModel);
 
-const liveEvents = new EventSource(`${LIVE_API_BASE}/events`);
-liveEvents.addEventListener("state", event => {
-  try { renderLiveState(JSON.parse(event.data)); } catch { /* ignore malformed event */ }
-});
+const liveRefreshTimer = window.setInterval(refreshLiveState, 2000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshLiveState(); });
+window.addEventListener("focus", refreshLiveState);
+window.addEventListener("pagehide", () => window.clearInterval(liveRefreshTimer), { once: true });
 
 refreshLiveState();
 checkStaffSession();

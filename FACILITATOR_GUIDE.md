@@ -4,15 +4,15 @@
 
 Use three devices or browser profiles:
 
-- **Audience** — `/OutreachTalk/`
-- **Moderator** — `/OutreachTalk/moderator/`
-- **Facilitator/presentation** — `/OutreachTalk/play/`
+- **Audience** — `/`
+- **Moderator** — `/moderator/`
+- **Facilitator/presentation** — `/play/`
 
-The independent phone experiments remain at `/OutreachTalk/lab/`.
+The independent phone experiments remain at `/lab/`.
 
 ## Before the room opens
 
-1. Start the Node service and verify the public URL.
+1. Open the deployed Cloudflare Worker and verify the public URL.
 2. Confirm that the audience QR opens the submission page over HTTPS.
 3. Open the moderator queue on a separate staff device and sign in.
 4. Open the facilitator deck and sign in under **Staff sign in**.
@@ -20,7 +20,7 @@ The independent phone experiments remain at `/OutreachTalk/lab/`.
 6. Submit, approve, reject, and finalize one test example end to end.
 7. Reopen and reset before admitting the audience.
 
-Do not run the moderated exercise from GitHub Pages alone. The static host cannot share state between devices.
+Do not use the old GitHub Pages address for the moderated exercise. Open the Cloudflare Worker address so all devices share the D1 database.
 
 ## Suggested formal-talk sequence
 
@@ -62,7 +62,7 @@ When the submission window ends, select **Finalize submissions**. New audience a
 
 ### 6. Continue with independent activities
 
-Later slides use the locked `/lab` experiments. These run independently on each phone and do not alter the shared facilitator dataset.
+Later slides use the locked `/lab/` experiments. These run independently on each phone and do not alter the shared facilitator dataset.
 
 ## Quiet-audience fallback
 
@@ -107,4 +107,4 @@ The presentation shows finalized state in two places:
 - Wrong example approved: reject it from the moderator history; it disappears from the public approved dataset on the next live update.
 - Finalized too early: select **Reopen submissions**.
 - Need a clean rehearsal or second session: select **Reset exercise**, type `RESET`, and confirm.
-- Backend unavailable: continue with the local presenter controls. The conceptual talk and independent slider demonstrations still work.
+- Cloudflare unavailable: continue with the local presenter controls. The conceptual talk and independent slider demonstrations still work.

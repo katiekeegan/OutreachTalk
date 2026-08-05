@@ -170,6 +170,22 @@ const audienceShortUrl = document.getElementById('audienceShortUrl');
 let audienceDockEnabled = true;
 let currentSlide = 0;
 
+function presentationBasePath() {
+  return location.pathname.replace(/\/play\/?$/, "").replace(/\/$/, "");
+}
+
+function audienceTargetForSlide(slide) {
+  const base = `${location.origin}${presentationBasePath()}`;
+  const activity = slide.dataset.audienceActivity;
+  if (activity === "join" || activity === "live-dataset") return `${base}/`;
+  const code = slide.dataset.audienceCode;
+  return code ? `${base}/lab/?code=${encodeURIComponent(code)}` : `${base}/lab/`;
+}
+
+function shortDisplayUrl(target) {
+  return target.replace(/^https?:\/\//, "").replace(/\/$/, "");
+}
+
 function updateAudienceDock(slide) {
   if (!audienceDock || !audienceToggle) return;
   const activity = slide.dataset.audienceActivity;
@@ -181,9 +197,18 @@ function updateAudienceDock(slide) {
 
   if (!activity) return;
   const isJoin = activity === 'join';
+  const target = audienceTargetForSlide(slide);
   audienceDockKicker.textContent = isJoin ? 'Scan once at the start' : 'Try this activity';
   audienceDockTitle.textContent = slide.dataset.audienceLabel || 'Audience activity';
-  audienceQrImage.src = slide.dataset.audienceQr || '../assets/qr/audience.png';
+  if (globalThis.OutreachQRCode) {
+    audienceQrImage.src = globalThis.OutreachQRCode.svgDataUrl(target, {
+      cellSize: 5,
+      marginCells: 4,
+      label: `QR code for ${slide.dataset.audienceLabel || 'the audience activity'}`
+    });
+  } else {
+    audienceQrImage.src = '../assets/qr/placeholder.png';
+  }
   audienceQrImage.alt = `QR code for ${slide.dataset.audienceLabel || 'the audience activity'}`;
   audienceCodeRow.hidden = isJoin || !slide.dataset.audienceCode;
   audienceCode.textContent = slide.dataset.audienceCode || '';
@@ -193,7 +218,7 @@ function updateAudienceDock(slide) {
     : directLink
       ? 'Scan to open this activity directly.'
       : 'Already in the lab? Enter this code. New arrival? Scan the QR.';
-  if (audienceShortUrl) audienceShortUrl.textContent = slide.dataset.audienceShortUrl || 'katiekeegan.org/OutreachTalk/lab';
+  if (audienceShortUrl) audienceShortUrl.textContent = shortDisplayUrl(target);
 }
 
 function showSlide(index) {

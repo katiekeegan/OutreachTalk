@@ -1,49 +1,38 @@
 # Deployment
 
-## Why GitHub Pages is insufficient
+The production target is Cloudflare Workers with a D1 database. Follow [CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md) for the dashboard steps.
 
-The moderated exercise requires a shared process that can:
+## Why GitHub Pages is no longer enough
 
-- store submissions from many devices;
-- keep moderation status synchronized;
-- protect approval, rejection, and finalization behind server-side passcodes;
-- reject new submissions after finalization.
+The moderated exercise needs a shared process that can store submissions, synchronize status, keep staff passcodes server-side, and lock new intake after finalization. GitHub Pages serves static files only and cannot perform those jobs.
 
-GitHub Pages serves static files only and cannot provide those capabilities.
+## Cloudflare resources
 
-## Render Blueprint
+The repository declares:
 
-The included `render.yaml` defines a Docker web service with a persistent disk.
+- one Worker named `outreach-talk`;
+- one static-assets binding named `ASSETS`;
+- one automatically provisioned D1 binding named `DB`;
+- three runtime secrets.
 
-1. Push this repository to GitHub.
-2. In Render, create a new Blueprint and select the repository.
-3. Set secret values for `MODERATOR_PASSCODE` and `FACILITATOR_PASSCODE`.
-4. Deploy.
-5. Confirm these routes:
-   - `/OutreachTalk/api/state`
-   - `/OutreachTalk/`
-   - `/OutreachTalk/moderator/`
-   - `/OutreachTalk/play/`
-6. Configure HTTPS and the desired domain.
+Wrangler creates and attaches the D1 database during the first deployment because the binding intentionally has no account-specific database ID.
 
-## Existing custom path
+## Database initialization
 
-To preserve `https://katiekeegan.org/OutreachTalk/`, configure the server or CDN responsible for `katiekeegan.org` to proxy `/OutreachTalk/*` to this Node service. A GitHub Pages CNAME by itself cannot proxy a subpath to a dynamic backend.
+The Worker runs idempotent `CREATE TABLE IF NOT EXISTS` statements on first API use. The same schema is also recorded in `migrations/0001_initial.sql` for future maintenance.
 
-A simpler alternative is to use a dedicated subdomain such as `talk.katiekeegan.org` and set:
+## Routes
 
-```dotenv
-APP_BASE_PATH=
-```
+With the default root deployment:
 
-If the public URL changes, regenerate every QR code in `public/assets/qr/`.
+- `/` audience
+- `/moderator/` moderator
+- `/play/` facilitator
+- `/lab/` independent activities
+- `/api/state` health/state endpoint
 
-## Persistent state
+Set `APP_BASE_PATH` only when intentionally deploying under a path prefix. A dedicated workers.dev address or subdomain is simpler and should leave it empty.
 
-The production `STATE_FILE` should live on persistent disk. The included Render configuration uses:
+## Custom domain
 
-```dotenv
-STATE_FILE=/var/data/exercise-state.json
-```
-
-Back up or reset this file between events as appropriate.
+After workers.dev testing succeeds, a dedicated subdomain such as `talk.katiekeegan.org` can point directly to the Worker. The presenter creates QR codes from the current origin, so no application-code change is needed when the domain changes.
