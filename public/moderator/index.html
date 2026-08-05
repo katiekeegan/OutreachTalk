@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Moderator Queue · OutreachTalk</title>
+  <link rel="stylesheet" href="../role.css" />
+  <link rel="stylesheet" href="moderator.css" />
+</head>
+<body>
+  <header class="role-header">
+    <a class="brand" href="../">
+      <span class="brand-mark" aria-hidden="true">∑</span>
+      <strong>Training Data Lab</strong>
+    </a>
+    <div class="cluster">
+      <span class="role-chip">Moderator</span>
+      <button id="logoutButton" class="secondary compact" type="button" hidden>Log out</button>
+    </div>
+  </header>
+
+  <main class="role-shell moderator-shell">
+    <section id="loginScreen" class="card stack" aria-labelledby="loginTitle">
+      <p class="eyebrow">Staff access</p>
+      <h1 id="loginTitle">Open the moderation queue.</h1>
+      <p class="lede">Approve examples that are safe, relevant, and useful for the live model. Reject personal information, harassment, or off-topic entries.</p>
+      <div>
+        <label for="passcode">Moderator passcode</label>
+        <input id="passcode" type="password" autocomplete="current-password" />
+      </div>
+      <div class="cluster">
+        <button id="loginButton" class="primary" type="button">Unlock moderator controls</button>
+        <span id="loginFeedback" class="helper" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section id="queueScreen" hidden>
+      <div class="split queue-heading">
+        <div>
+          <p class="eyebrow">Live moderation</p>
+          <h1>Review the queue.</h1>
+          <p class="lede">Only approved examples enter the facilitator’s dataset.</p>
+        </div>
+        <span id="exerciseBadge" class="status-badge status-open">Open</span>
+      </div>
+
+      <div class="metric-row" aria-label="Submission counts">
+        <div class="metric"><strong id="pendingMetric">0</strong><span>pending</span></div>
+        <div class="metric"><strong id="approvedMetric">0</strong><span>approved</span></div>
+        <div class="metric"><strong id="rejectedMetric">0</strong><span>rejected</span></div>
+      </div>
+
+      <section class="card" aria-labelledby="pendingTitle">
+        <div class="split">
+          <div>
+            <h2 id="pendingTitle">Pending review</h2>
+            <p class="helper">Newest submissions appear first.</p>
+          </div>
+          <button id="refreshButton" class="secondary compact" type="button">Refresh</button>
+        </div>
+        <div id="pendingList" class="moderation-list" aria-live="polite"></div>
+      </section>
+
+      <section class="card" aria-labelledby="historyTitle">
+        <h2 id="historyTitle">Recent decisions</h2>
+        <div id="historyList" class="moderation-list compact-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="moderator.js"></script>
+</body>
+</html>

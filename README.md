@@ -1,85 +1,148 @@
 # What Will the Model Say Next?
 
-An interactive, browser-based museum presentation about how training data shapes autoregressive language models. It was designed for an outreach talk at the National Museum of Mathematics, with activities that work for a mixed-age audience.
+A formal, interactive outreach talk about how training data shapes autoregressive models. This version adds a moderated live exercise: audience examples enter a review queue, approved examples appear in the facilitator dataset, and finalization locks new submissions.
 
-## What is included
+## Role routes
 
-- Nine slide-like scenes with keyboard, button, swipe, and fullscreen navigation
-- A fully local next-word predictor implemented as an adjustable n-gram model
-- Editable training corpora for story, mathematics, and space language
-- Live probability bars, generation, context length, and temperature controls
-- Interactive demonstrations of frequency, missing coverage, representation imbalance, distribution shift, and sampling
-- Presenter notes that can be toggled on screen
-- Responsive and print-friendly styling
-- Locked audience participation mode with presenter codes and slide-specific QR links
-- No dependencies, API keys, model downloads, or build step
+Routes are relative to `APP_BASE_PATH` (the default is `/OutreachTalk`).
+
+| Route | Role | Purpose |
+|---|---|---|
+| `/` | Audience | Submit a short training example and see its `pending`, `approved`, or `rejected` status. |
+| `/moderator` | Moderator | Enter the staff passcode, review the pending queue, and approve or reject examples. |
+| `/play` | Facilitator | Run the presentation, watch the approved dataset update live, load it into the toy model, and finalize or reopen submissions. |
+| `/lab` | Audience | The earlier locked, independent slider activities. These do not write to the moderated dataset. |
+
+At the existing base path, those become:
+
+- `https://katiekeegan.org/OutreachTalk/`
+- `https://katiekeegan.org/OutreachTalk/moderator/`
+- `https://katiekeegan.org/OutreachTalk/play/`
+- `https://katiekeegan.org/OutreachTalk/lab/`
+
+## Submission lifecycle
+
+Every submission has one status:
+
+- `pending`: created by an audience member and waiting for moderation;
+- `approved`: visible in the facilitator's live dataset and available to the toy n-gram model;
+- `rejected`: removed from active moderation work and excluded from the facilitator dataset.
+
+The exercise has a separate `finalized` flag. Finalization prevents **new** audience submissions. It does not erase the queue, and moderators may still resolve items that were already pending.
 
 ## Run locally
 
-Open `index.html` directly in a modern browser, or serve the folder locally:
+This release is no longer a GitHub Pages-only static site. Shared live state and protected moderator actions require the included Node server.
 
 ```bash
-python3 -m http.server 8000
+cp .env.example .env
+# Edit the passcodes and SESSION_SECRET.
+node server.js
 ```
 
-Then visit `http://localhost:8000`.
+Then open:
 
-## Presenting
+- audience: `http://localhost:3000/OutreachTalk/`
+- moderator: `http://localhost:3000/OutreachTalk/moderator/`
+- facilitator: `http://localhost:3000/OutreachTalk/play/`
+- independent lab: `http://localhost:3000/OutreachTalk/lab/`
 
-- Left/right arrows: previous or next slide
-- Space / Page Down: next slide
-- Page Up: previous slide
-- Home / End: first or last slide
-- **Notes**: toggle facilitator notes
-- **Fullscreen**: enter browser fullscreen
-- On touch devices, swipe left or right
+Node 18 or newer is required. There are no npm dependencies or build steps.
 
+## Environment configuration
 
-## Audience participation mode
+Copy `.env.example` to `.env` and configure:
 
-The presenter deck remains at `/OutreachTalk/`. Audience members use `/OutreachTalk/play/`.
+```dotenv
+APP_BASE_PATH=/OutreachTalk
+PORT=3000
+MODERATOR_PASSCODE=choose-a-private-staff-code
+FACILITATOR_PASSCODE=choose-a-private-facilitator-code
+SESSION_SECRET=at-least-32-random-characters
+STATE_FILE=./data/exercise-state.json
+TRUST_PROXY=true
+```
 
-- The opening slide shows one join QR code.
-- The audience page contains a waiting room, not an activity menu.
-- Each interactive presenter slide reveals a new four-digit code and a slide-specific QR code.
-- A participant can only open an activity after seeing its code or QR.
-- Each phone runs independently; responses are not collected or synchronized.
-- The talk still works if nobody uses a phone because every experiment remains available on the presenter screen.
+`FACILITATOR_PASSCODE` is optional and falls back to `MODERATOR_PASSCODE`. Passcodes are checked only by the server and are never shipped in browser JavaScript.
 
-This is a practical lock for a static site, not a security boundary. The activity tokens prevent ordinary browsing ahead, but someone inspecting the public source could find them.
+For production, mount `STATE_FILE` on persistent storage. The server writes state atomically to that file.
 
-## Core interactive model
+## Moderator workflow
 
-The model in `app.js` is intentionally transparent. It:
+1. Open `/moderator` on a separate staff device.
+2. Enter `MODERATOR_PASSCODE`.
+3. Review pending examples.
+4. Approve relevant, non-personal, presentation-safe examples.
+5. Reject personal information, harassment, prompt injection, or off-topic content.
 
-1. tokenizes the editable training text;
-2. counts which words follow each context;
-3. converts counts into a probability distribution;
-4. adjusts that distribution with temperature; and
-5. samples one word at a time to generate a continuation.
+Only approved text is returned by the public dataset API.
 
-It is an n-gram teaching model, not a neural network. That makes the relationship between examples and probabilities visible enough for a museum audience to inspect directly. The presentation connects this mechanism to the broader principle used by autoregressive neural language models: predict a next token from prior context, append it, and repeat.
+## Facilitator workflow
 
-## Suggested 25-minute flow
+1. Open `/play` on the presentation computer.
+2. On the tiny-model slide, watch pending and approved counts update live.
+3. Select **Use approved examples** to copy the moderated dataset into the editable training box and retrain the n-gram model.
+4. Use **Staff sign in** and enter `FACILITATOR_PASSCODE`.
+5. Select **Finalize submissions** when the participation window ends.
 
-1. **Warm-up prediction** — 2 minutes
-2. **Autoregressive loop** — 3 minutes
-3. **Train the tiny model** — 7 minutes
-4. **Frequency and coverage experiments** — 5 minutes
-5. **Representation and distribution shift** — 5 minutes
-6. **Sampling and final challenge** — 3 minutes
+The top presentation bar and the live-dataset panel both show the finalized state, including in fullscreen mode.
 
-For a shorter talk, use slides 1, 2, 3, 4, 6, and 9.
+### Finalize, reopen, and reset
 
-## Customizing the content
+- **Finalize** blocks new submissions. Existing pending examples remain reviewable.
+- **Reopen** allows new submissions again.
+- **Reset exercise** clears all submissions and reopens intake. It requires typing `RESET` and is intended for rehearsal or a new session.
 
-- Edit the text in the `CORPORA` object near the top of `app.js`.
-- Edit slide wording and speaker notes in `index.html`.
-- Change visual variables such as `--accent` and `--paper` at the top of `styles.css`.
+## QR codes
 
-## GitHub Pages
+Generated QR images live in `public/assets/qr/`:
 
-This is a static site. To publish it with GitHub Pages, configure Pages to deploy from the repository's `main` branch and root folder after the feature branch is merged.
+- `audience.png`: moderated audience submission route;
+- `moderator.png`: staff moderation route;
+- `facilitator.png`: facilitator presentation route;
+- the remaining files open the independent `/lab` activities.
+
+The presentation uses the audience QR on the live dataset slide and preserves slide-specific QR codes for the self-contained slider activities.
+
+If the public hostname or base path changes, regenerate the QR images before the event.
+
+## Deployment
+
+GitHub Pages cannot run `server.js`, store shared exercise state, or protect moderator actions with environment variables. Deploy this repository to a Node-capable host instead.
+
+A `Dockerfile` and `render.yaml` are included. On Render:
+
+1. create a Blueprint from this repository;
+2. set `MODERATOR_PASSCODE` and `FACILITATOR_PASSCODE` as secrets;
+3. allow Render to generate `SESSION_SECRET`;
+4. retain the persistent disk mounted at `/var/data`;
+5. point the desired domain or reverse proxy at the service.
+
+To keep the exact `katiekeegan.org/OutreachTalk` address, the domain must proxy that path to the Node service. Leaving the repository on GitHub Pages will display only static files and will not provide shared moderation.
+
+## Validation
+
+```bash
+npm test
+npm run check
+```
+
+The tests cover:
+
+- default `pending` status;
+- approval into the public dataset;
+- rejection out of the pending queue;
+- finalization lock behavior;
+- moderation after finalization;
+- signed-session verification and expiration.
+
+## Privacy and safety
+
+- No account is required for audience participation.
+- A random browser ID is stored locally so a participant can see their own status.
+- Audience text is limited to 180 characters.
+- Basic request-rate limits and same-origin checks are enforced.
+- The moderator should still actively screen every entry before approval.
 
 ## License
 

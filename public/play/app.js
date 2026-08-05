@@ -166,6 +166,7 @@ const audienceQrImage = document.getElementById('audienceQrImage');
 const audienceCodeRow = document.getElementById('audienceCodeRow');
 const audienceCode = document.getElementById('audienceCode');
 const audienceDockCopy = document.getElementById('audienceDockCopy');
+const audienceShortUrl = document.getElementById('audienceShortUrl');
 let audienceDockEnabled = true;
 let currentSlide = 0;
 
@@ -182,13 +183,17 @@ function updateAudienceDock(slide) {
   const isJoin = activity === 'join';
   audienceDockKicker.textContent = isJoin ? 'Scan once at the start' : 'Try this activity';
   audienceDockTitle.textContent = slide.dataset.audienceLabel || 'Audience activity';
-  audienceQrImage.src = slide.dataset.audienceQr || 'assets/qr/join.png';
+  audienceQrImage.src = slide.dataset.audienceQr || '../assets/qr/audience.png';
   audienceQrImage.alt = `QR code for ${slide.dataset.audienceLabel || 'the audience activity'}`;
   audienceCodeRow.hidden = isJoin || !slide.dataset.audienceCode;
   audienceCode.textContent = slide.dataset.audienceCode || '';
+  const directLink = !slide.dataset.audienceCode;
   audienceDockCopy.textContent = isJoin
-    ? 'Scan once and keep the page open. Phones are optional.'
-    : 'Already joined? Enter this code. New arrival? Scan the QR.';
+    ? 'Scan once to submit to the moderated live dataset. Phones are optional.'
+    : directLink
+      ? 'Scan to open this activity directly.'
+      : 'Already in the lab? Enter this code. New arrival? Scan the QR.';
+  if (audienceShortUrl) audienceShortUrl.textContent = slide.dataset.audienceShortUrl || 'katiekeegan.org/OutreachTalk/lab';
 }
 
 function showSlide(index) {

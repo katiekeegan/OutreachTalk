@@ -1,0 +1,11 @@
+.moderator-shell { width: min(980px, calc(100% - 2rem)); }
+.compact { padding: .5rem .75rem; }
+.queue-heading { margin-bottom: 1.25rem; }
+.moderation-list { display: grid; gap: .85rem; margin-top: 1rem; }
+.moderation-item { border: 1px solid var(--line); border-radius: .95rem; background: white; padding: 1rem; }
+.moderation-item p { margin: .65rem 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+.moderation-actions { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: flex-end; }
+.moderation-actions button { min-width: 7rem; }
+.compact-list .moderation-item { padding: .75rem .9rem; }
+.compact-list .moderation-item p { margin: .4rem 0 0; font-size: .95rem; }
+.timestamp { color: var(--muted); font-size: .82rem; }

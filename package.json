@@ -1,0 +1,16 @@
+{
+  "name": "outreach-talk-live-exercise",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Moderated live audience dataset exercise for the MoMath OutreachTalk presentation.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check lib/store.js && node --check lib/auth.js && node --check public/audience.js && node --check public/moderator/moderator.js && node --check public/play/live.js && node --check public/play/app.js && node --check public/lab/play.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

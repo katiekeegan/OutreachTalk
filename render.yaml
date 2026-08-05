@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: outreach-talk
+    runtime: docker
+    plan: starter
+    healthCheckPath: /OutreachTalk/api/state
+    envVars:
+      - key: APP_BASE_PATH
+        value: /OutreachTalk
+      - key: STATE_FILE
+        value: /var/data/exercise-state.json
+      - key: TRUST_PROXY
+        value: "true"
+      - key: MODERATOR_PASSCODE
+        sync: false
+      - key: FACILITATOR_PASSCODE
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+    disk:
+      name: outreach-talk-data
+      mountPath: /var/data
+      sizeGB: 1

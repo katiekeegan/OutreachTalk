@@ -1,70 +1,110 @@
-# Facilitator Guide
+# Facilitator Guide: Moderated Live Dataset Exercise
 
-## Central message
+## Roles
 
-A model's output is shaped by the examples it learned from. Training data affects what is common, what is missing, which associations are easy to reproduce, and how well the model handles a new situation.
+Use three devices or browser profiles:
 
-## Audience participation prompts
+- **Audience** — `/OutreachTalk/`
+- **Moderator** — `/OutreachTalk/moderator/`
+- **Facilitator/presentation** — `/OutreachTalk/play/`
 
-### Slide 1 — Predict the prediction
-Ask visitors to complete “Once upon a…” before clicking. Follow with: “Did you use logic, or did you use a pattern you have seen many times?”
+The independent phone experiments remain at `/OutreachTalk/lab/`.
 
-### Slide 3 — Program with examples
-Invite one visitor to choose a corpus and another to choose a prompt. Add a repeated sentence to the text area and retrain. Ask the audience to predict which probability will rise.
+## Before the room opens
 
-Useful edits:
+1. Start the Node service and verify the public URL.
+2. Confirm that the audience QR opens the submission page over HTTPS.
+3. Open the moderator queue on a separate staff device and sign in.
+4. Open the facilitator deck and sign in under **Staff sign in**.
+5. Use **Reset exercise** to clear rehearsal data.
+6. Submit, approve, reject, and finalize one test example end to end.
+7. Reopen and reset before admitting the audience.
 
-- Repeat `once upon a triangle` five times.
-- Remove every sentence containing `time`.
-- Add `the museum is mathematical` several times.
-- Put one surprising phrase in the dataset ten times.
+Do not run the moderated exercise from GitHub Pages alone. The static host cannot share state between devices.
 
-### Slide 4 — Make a distribution
-Invite a visitor to move the frequency sliders. Ask: “Are we changing the algorithm?” The answer is no; only the examples change.
+## Suggested formal-talk sequence
 
-### Slide 5 — Find a hole
-Begin with only circle and triangle books selected. Ask the model about a Möbius strip, then add topology coverage and try again.
+### 1. Establish the idea without phones
 
-### Slide 6 — Discuss representation
-State clearly that the display is a toy count model. Real systems can inherit skew through collection, labeling, filtering, objectives, and human feedback—not just direct repetition.
+Ask the room to predict the word after “Once upon a…”. Make the central point first: likely words come from repeated patterns in data.
 
-### Slide 7 — Change worlds
-Ask for meanings of “plane” before selecting each dataset. Point out that a familiar token can have a different continuation in a different domain.
+### 2. Invite contributions
 
-### Slide 8 — Sampling
-Run several low-temperature samples, then several high-temperature samples. Ask whether higher temperature made the model more knowledgeable. It did not; it made sampling less conservative.
+On the tiny-model slide, show the QR and say:
 
-## Avoiding common misconceptions
+> Submit one short sentence that could belong in a model’s training data. A moderator will review it before it appears here. Phones are optional; I will continue the demonstration either way.
 
-- **“Models just copy.”** They can sometimes reproduce training fragments, but generation is generally a repeated probability calculation over possible next tokens.
-- **“The most likely answer is the true answer.”** Probability under the model is not the same as truth in the world.
-- **“More data fixes everything.”** More data can repeat errors or imbalance. Relevance, coverage, quality, consent, and evaluation matter.
-- **“This n-gram model is how ChatGPT works internally.”** It is an analogy that exposes the same next-token objective. Modern language models use neural networks and much richer representations.
+Give the room a specific prompt, such as:
 
-## Optional physical activity
+- “The museum is…”
+- “Math can be…”
+- “A pattern is…”
 
-Give visitors colored cards representing next words. Build a “dataset” by placing repeated cards in a bag. Draw one card to sample a next word. Add or remove cards and repeat. Then explain that temperature acts like changing how strongly the draw favors common cards.
+Specific prompts produce a dataset that is easier to compare and explain.
 
-## Technical notes
+### 3. Keep speaking while moderation happens
 
-Everything runs in the browser. No visitor text is sent to a server. Reloading the page resets the examples.
+Do not wait silently for submissions. Continue explaining autoregression while the moderator works. The pending and approved counters provide enough feedback to know when the dataset is usable.
 
-## Audience phone flow
+### 4. Load approved examples
 
-Keep the presenter deck at `https://katiekeegan.org/OutreachTalk/`. Ask the audience to scan the opening QR once and keep `https://katiekeegan.org/OutreachTalk/play/` open.
+Select **Use approved examples**. This copies only approved sentences into the training box and retrains the toy model.
 
-The audience page does not show an activity menu. Reveal each activity only when you reach its slide:
+Ask:
 
-| Slide | Activity | Code |
-|---|---|---:|
-| 3 | Tiny predictor | 7316 |
-| 4 | Frequency | 2049 |
-| 5 | Coverage | 5827 |
-| 6 | Representation | 4183 |
-| 7 | Context | 9672 |
-| 8 | Temperature | 3506 |
-| 9 | Final challenge | 6241 |
+- Which words became likely?
+- Which repeated phrase had the strongest effect?
+- What did the moderator remove from the model’s possible training history?
 
-Each slide also displays a direct QR code for late arrivals. Allow roughly 20–30 seconds for a phone experiment, then demonstrate the same action on the main screen. Never make the talk depend on receiving audience responses.
+### 5. Finalize the exercise
 
-Use the **Hide audience QR** control when you want the room focused only on the projected explanation.
+When the submission window ends, select **Finalize submissions**. New audience attempts receive a clear finalized message. If pending examples remain, the interface warns you before finalizing; the moderator can still resolve those existing entries.
+
+### 6. Continue with independent activities
+
+Later slides use the locked `/lab` experiments. These run independently on each phone and do not alter the shared facilitator dataset.
+
+## Quiet-audience fallback
+
+The presentation remains complete with zero submissions:
+
+1. narrate one or two prepared examples;
+2. use the editable training text on the facilitator screen;
+3. move the frequency and temperature controls yourself;
+4. frame phones as optional exploration rather than a requirement.
+
+Never pause the formal talk indefinitely while waiting for participation. Set a time box of roughly 30–45 seconds.
+
+## Moderator approval standard
+
+Approve examples that are:
+
+- relevant to the current prompt;
+- short enough to read aloud;
+- free of personal information;
+- suitable for a mixed-age museum audience;
+- useful for illustrating frequency, coverage, context, or bias.
+
+Reject examples containing:
+
+- names, contact information, or other personal data;
+- harassment, slurs, sexual content, threats, or graphic content;
+- instructions aimed at disrupting the system;
+- unrelated advertising or repeated spam;
+- text that would be uncomfortable to project publicly.
+
+## Finalization semantics
+
+Finalization means **submission intake is closed**. It does not automatically approve or reject remaining pending items. This lets the facilitator keep the talk moving while the moderator finishes the existing queue.
+
+The presentation shows finalized state in two places:
+
+- the top control bar;
+- the live-dataset panel on the tiny-model slide.
+
+## Recovery procedures
+
+- Wrong example approved: reject it from the moderator history; it disappears from the public approved dataset on the next live update.
+- Finalized too early: select **Reopen submissions**.
+- Need a clean rehearsal or second session: select **Reset exercise**, type `RESET`, and confirm.
+- Backend unavailable: continue with the local presenter controls. The conceptual talk and independent slider demonstrations still work.

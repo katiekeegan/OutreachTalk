@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Submit a training example for the live MoMath autoregressive model exercise." />
+  <title>Build the Training Set · MoMath</title>
+  <link rel="stylesheet" href="role.css" />
+</head>
+<body>
+  <header class="role-header">
+    <a class="brand" href="./">
+      <span class="brand-mark" aria-hidden="true">∑</span>
+      <strong>Training Data Lab</strong>
+    </a>
+    <span class="role-chip">Audience submission</span>
+  </header>
+
+  <main class="role-shell">
+    <p class="eyebrow">Live exercise</p>
+    <div class="split">
+      <div>
+        <h1>Help build the model’s dataset.</h1>
+        <p class="lede">Submit one short sentence. A moderator will review it before it becomes part of the facilitator’s live training data.</p>
+      </div>
+      <span id="exerciseBadge" class="status-badge status-open">Open</span>
+    </div>
+
+    <div id="finalizedNotice" class="notice notice-danger" hidden>
+      <strong>Submissions are closed.</strong> The facilitator finalized this exercise. You can still see the status of examples you already sent.
+    </div>
+
+    <section class="card stack" aria-labelledby="submitTitle">
+      <div>
+        <h2 id="submitTitle">Add a training example</h2>
+        <p class="helper">Try a sentence that could follow a prompt such as “The museum is…” or “Math can be…”. Do not include names or personal information.</p>
+      </div>
+      <div>
+        <label for="submissionText">Your example</label>
+        <textarea id="submissionText" maxlength="180" placeholder="The museum is full of surprising patterns."></textarea>
+        <div class="split helper"><span>4–180 characters</span><span id="characterCount">0 / 180</span></div>
+      </div>
+      <div class="cluster">
+        <button id="submitButton" class="primary" type="button">Send for review</button>
+        <span id="submitFeedback" class="helper" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="statusTitle">
+      <div class="split">
+        <div>
+          <h2 id="statusTitle">Your submissions</h2>
+          <p class="helper">Pending examples are not in the live dataset yet.</p>
+        </div>
+        <span id="approvedCount" class="role-chip">0 approved overall</span>
+      </div>
+      <div id="submissionList" class="submission-list" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer>No account is required. A random browser ID is used only to show your own submission statuses during this exercise.</footer>
+  <script src="audience.js"></script>
+</body>
+</html>
