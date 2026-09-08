@@ -61,6 +61,31 @@
 </div>
 <aside class="speaker-notes"><strong>Opening:</strong> Ask for a show of hands. The point is not that “time” is logically forced; it is culturally frequent in stories. Predictions begin with patterns in data.</aside>
 </section>
+
+<section aria-labelledby="slide-lm-title" class="slide" data-title="Language models today">
+<p class="eyebrow">Before we simplify</p>
+<h2 id="slide-lm-title">Language models are trained on almost everything humans have written.</h2>
+<div class="two-column-notes">
+<div><strong>What they are</strong><p>Modern systems such as GPT-4, Gemini, and Claude are transformer neural networks trained on hundreds of billions to trillions of words. After learning to predict text they are refined with human feedback to behave more helpfully and safely.</p></div>
+<div><strong>Why training data matters so much</strong><p>A model cannot produce language it has never seen patterns of. Its outputs reflect the frequency, framing, and gaps in whatever text it learned from, at a scale that makes those patterns difficult to audit.</p></div>
+</div>
+<div class="warning-callout">
+<strong>"On the Dangers of Stochastic Parrots" — Bender, Gebru, McMillan-Major, Shmitchell, FAccT 2021</strong>
+<p>This paper argued that very large language models carry serious risks: they encode and amplify the biases present in internet-scraped text; their environmental and financial costs are enormous and unequally distributed; and producing fluent text is not the same as understanding meaning — hence "stochastic parrots," statistically stitching together plausible sequences without comprehension. The paper sat at the center of a major controversy. Google pressured the authors to retract it, and lead researcher Timnit Gebru — known for her work on algorithmic bias and facial recognition — was fired. Co-lead Margaret Mitchell was fired shortly after. The case is now a reference point in debates about corporate AI governance and the suppression of safety-critical research.</p>
+</div>
+<aside class="speaker-notes"><strong>For adults in the audience:</strong> The Stochastic Parrots paper is short and freely available — worth reading in full. The controversy around Gebru's firing is well documented in Karen Hao's reporting for MIT Technology Review (April 2021). The core claim — that fluency is not understanding — remains actively debated but has shaped much of the AI ethics field.</aside>
+</section>
+<section aria-labelledby="slide-simplification-title" class="slide" data-title="What we are simplifying">
+<p class="eyebrow">Pedagogical honesty</p>
+<h2 id="slide-simplification-title">We are using a dramatic simplification, on purpose.</h2>
+<p class="lede">Today's demo runs an n-gram model, not a neural network. Here is what that means and why it is still useful.</p>
+<div class="two-column-notes">
+<div><strong>What the toy model does</strong><p>It counts how often each word follows a given sequence of words in the training text, then uses those raw counts directly as probabilities. Every number you see on screen is a count from data you provided. No learned parameters. No embeddings. No generalization beyond what it literally observed.</p></div>
+<div><strong>What real LLMs do instead</strong><p>Billions of learned parameters compress statistical patterns across trillions of words into dense vector representations. Real models generalize in ways a simple word count never could. Their internal probability distributions are not directly readable the way today's toy is.</p></div>
+</div>
+<div class="callout">The concepts transfer directly: frequency, coverage, representation, context, and sampling temperature all shape real model behavior. The toy makes those mechanisms visible precisely because nothing is hidden. It is a window into the logic, not a replica of the thing.</div>
+<aside class="speaker-notes"><strong>If challenged by a practitioner:</strong> Yes, this is a Markov model. No, it does not generalize. The point is exactly that it does not — you can trace every decision it makes back to a count in the training text. Invite skeptics to compare what the toy produces with what a real system produces on the same prompt and ask what is different and why. That gap is itself the lesson.</aside>
+</section>
 <section aria-labelledby="slide-2-title" class="slide" data-title="Autoregression">
 <p class="eyebrow">The basic loop</p>
 <h2 id="slide-2-title">One word at a time</h2>
