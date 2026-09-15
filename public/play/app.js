@@ -299,21 +299,24 @@ document.getElementById('fullscreenButton').addEventListener('click', async () =
   }
 });
 
-// Opening audience vote
-const openingResponse = document.getElementById('openingResponse');
-document.getElementById('openingChoices').addEventListener('click', event => {
-  const button = event.target.closest('button[data-choice]');
-  if (!button) return;
-  document.querySelectorAll('#openingChoices button').forEach(item => item.classList.remove('selected'));
-  button.classList.add('selected');
-  const choice = button.dataset.choice;
+// Opening audience vote (slide removed; guard in case elements are present in future)
+const openingChoicesEl = document.getElementById('openingChoices');
+if (openingChoicesEl) {
+  const openingResponse = document.getElementById('openingResponse');
+  openingChoicesEl.addEventListener('click', event => {
+    const button = event.target.closest('button[data-choice]');
+    if (!button) return;
+    document.querySelectorAll('#openingChoices button').forEach(item => item.classList.remove('selected'));
+    button.classList.add('selected');
+    const choice = button.dataset.choice;
   const messages = {
     time: 'Most story-heavy datasets strongly favor “time.” Your cultural prediction matches the data pattern.',
     triangle: 'A math-heavy dataset could make “triangle” the favorite. Change the examples, change the prediction.',
     sandwich: 'Unusual—but perfectly learnable if the dataset repeats “once upon a sandwich.”'
   };
   openingResponse.textContent = messages[choice];
-});
+  });
+}
 
 // Interactive n-gram lab
 const model = new NGramModel(2);

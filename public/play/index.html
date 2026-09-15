@@ -4,8 +4,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="An interactive museum presentation about how training data shapes autoregressive language models." name="description"/>
-<title>What Will the Model Say Next?</title>
+<meta content="A MoMath talk about training data, language models, and what a model actually learns — with live audience participation." name="description"/>
+<title>Parrots, Probability, and Predictions</title>
 <link href="styles.css" rel="stylesheet"/>
 </head>
 <body>
@@ -35,56 +35,38 @@
 <p class="audience-short-url" id="audienceShortUrl">Loading current address…</p>
 </aside>
 <main aria-live="polite" class="slides" id="slides">
-<section aria-labelledby="slide-1-title" class="slide active" data-title="Opening">
-<div class="hero-grid">
-<div>
-<p class="eyebrow">National Museum of Mathematics outreach talk</p>
-<h1 id="slide-1-title">What will the model say <em>next?</em></h1>
-<p class="lede">A language model is a probability machine. Change the examples it learns from, and you change the future it predicts.</p>
-<div class="prompt-card audience-card">
-<span class="prompt-label">Audience warm-up</span>
-<p class="giant-prompt">“Once upon a…”</p>
-<div class="choice-row" id="openingChoices">
-<button data-choice="time" type="button">time</button>
-<button data-choice="triangle" type="button">triangle</button>
-<button data-choice="sandwich" type="button">sandwich</button>
-</div>
-<p aria-live="polite" class="response-line" id="openingResponse">Vote before revealing the model’s favorite.</p>
-</div>
-</div>
-<div aria-label="Decorative probability visualization" class="probability-sculpture">
-<div class="orbit orbit-a"><span>time</span></div>
-<div class="orbit orbit-b"><span>day</span></div>
-<div class="orbit orbit-c"><span>triangle</span></div>
-<div class="core">P(next word)</div>
-</div>
-</div>
-<aside class="speaker-notes"><strong>Opening:</strong> Ask for a show of hands. The point is not that “time” is logically forced; it is culturally frequent in stories. Predictions begin with patterns in data.</aside>
-</section>
-
-<section aria-labelledby="slide-lm-title" class="slide" data-title="Language models today">
+<section aria-labelledby="slide-lm-title" class="slide active" data-title="Language models today">
 <p class="eyebrow">Before we simplify</p>
-<h2 id="slide-lm-title">Language models are trained on almost everything humans have written.</h2>
-<div class="two-column-notes">
-<div><strong>What they are</strong><p>Modern systems such as GPT-4, Gemini, and Claude are transformer neural networks trained on hundreds of billions to trillions of words. After learning to predict text they are refined with human feedback to behave more helpfully and safely.</p></div>
-<div><strong>Why training data matters so much</strong><p>A model cannot produce language it has never seen patterns of. Its outputs reflect the frequency, framing, and gaps in whatever text it learned from, at a scale that makes those patterns difficult to audit.</p></div>
+<h2 id="slide-lm-title">Real language models learn from trillions of words.</h2>
+<div class="definition-grid">
+<div><span>Architecture</span><p>Transformer neural networks with billions of learned parameters — not explicit rules, but compressed statistical patterns across enormous amounts of text.</p></div>
+<div><span>Training</span><p>Predict the next token, repeatedly, across hundreds of billions of examples. Then refine with human feedback to be more helpful and less harmful.</p></div>
+<div><span>Scale</span><p>GPT-4, Gemini, Claude. Trained on books, code, the whole web. The training corpus shapes everything the model can and cannot say.</p></div>
 </div>
-<div class="warning-callout">
-<strong>"On the Dangers of Stochastic Parrots" — Bender, Gebru, McMillan-Major, Shmitchell, FAccT 2021</strong>
-<p>This paper argued that very large language models carry serious risks: they encode and amplify the biases present in internet-scraped text; their environmental and financial costs are enormous and unequally distributed; and producing fluent text is not the same as understanding meaning — hence "stochastic parrots," statistically stitching together plausible sequences without comprehension. The paper sat at the center of a major controversy. Google pressured the authors to retract it, and lead researcher Timnit Gebru — known for her work on algorithmic bias and facial recognition — was fired. Co-lead Margaret Mitchell was fired shortly after. The case is now a reference point in debates about corporate AI governance and the suppression of safety-critical research.</p>
-</div>
-<aside class="speaker-notes"><strong>For adults in the audience:</strong> The Stochastic Parrots paper is short and freely available — worth reading in full. The controversy around Gebru's firing is well documented in Karen Hao's reporting for MIT Technology Review (April 2021). The core claim — that fluency is not understanding — remains actively debated but has shaped much of the AI ethics field.</aside>
+<div class="callout">Every output is downstream of training data. Change the data — its scope, its balance, its gaps — and you change the model's behavior.</div>
+<aside class="speaker-notes"><strong>Framing:</strong> The simplification coming in the next two slides is deliberate. But the stakes here are real. The toy model will make the mechanism visible; the concepts transfer to systems at this scale.</aside>
 </section>
-<section aria-labelledby="slide-simplification-title" class="slide" data-title="What we are simplifying">
-<p class="eyebrow">Pedagogical honesty</p>
-<h2 id="slide-simplification-title">We are using a dramatic simplification, on purpose.</h2>
-<p class="lede">Today's demo runs an n-gram model, not a neural network. Here is what that means and why it is still useful.</p>
-<div class="two-column-notes">
-<div><strong>What the toy model does</strong><p>It counts how often each word follows a given sequence of words in the training text, then uses those raw counts directly as probabilities. Every number you see on screen is a count from data you provided. No learned parameters. No embeddings. No generalization beyond what it literally observed.</p></div>
-<div><strong>What real LLMs do instead</strong><p>Billions of learned parameters compress statistical patterns across trillions of words into dense vector representations. Real models generalize in ways a simple word count never could. Their internal probability distributions are not directly readable the way today's toy is.</p></div>
+<section aria-labelledby="slide-sp-title" class="slide" data-title="Stochastic Parrots">
+<p class="eyebrow">Academic context · FAccT 2021</p>
+<h2 id="slide-sp-title">"On the Dangers of Stochastic Parrots"</h2>
+<p class="lede">Bender, Gebru, McMillan-Major, Shmitchell</p>
+<div class="definition-grid">
+<div><span>Bias at scale</span><p>Models trained on internet text inherit and amplify the biases in that data — and at scale those patterns affect millions of people.</p></div>
+<div><span>Cost</span><p>Training very large models consumes enormous energy and financial resources that are unequally distributed.</p></div>
+<div><span>The parrot claim</span><p>Fluent text is not evidence of understanding. A model stitches together statistically plausible sequences without comprehending meaning.</p></div>
 </div>
-<div class="callout">The concepts transfer directly: frequency, coverage, representation, context, and sampling temperature all shape real model behavior. The toy makes those mechanisms visible precisely because nothing is hidden. It is a window into the logic, not a replica of the thing.</div>
-<aside class="speaker-notes"><strong>If challenged by a practitioner:</strong> Yes, this is a Markov model. No, it does not generalize. The point is exactly that it does not — you can trace every decision it makes back to a count in the training text. Invite skeptics to compare what the toy produces with what a real system produces on the same prompt and ask what is different and why. That gap is itself the lesson.</aside>
+<div class="warning-callout"><strong>The controversy:</strong> Google pressured the authors to retract the paper. Lead researcher Timnit Gebru — known for her work on algorithmic bias — was fired. Co-lead Margaret Mitchell was fired shortly after. The case is now a reference point in debates about corporate AI governance and the suppression of safety-critical research. Karen Hao's reporting in MIT Technology Review (April 2021) is the best starting point.</div>
+<aside class="speaker-notes"><strong>For the room:</strong> The parrot claim is contested — critics argue it conflates statistical competence with the absence of something meaningful. What is not contested: the bias-at-scale argument, and the institutional controversy. Both are relevant to what we are about to do: ask an audience to build a dataset.</aside>
+</section>
+<section aria-labelledby="slide-simplification-title" class="slide" data-title="What we are using today">
+<p class="eyebrow">Pedagogical honesty</p>
+<h2 id="slide-simplification-title">Today's model is a word counter, not a neural network.</h2>
+<div class="two-column-notes">
+<div><strong>N-gram model (today)</strong><p>Counts how often each word follows a given sequence. Every probability on screen is a raw count from data you provided. No learned parameters. No embeddings. Fully transparent.</p></div>
+<div><strong>Real LLMs</strong><p>Billions of parameters compress patterns from trillions of words into dense representations. They generalize in ways a word count cannot, and their internals are not directly readable.</p></div>
+</div>
+<div class="callout">It is a window into the logic, not a replica of the thing. Frequency, coverage, representation, context, and temperature all shape real model behavior — they are just harder to see there.</div>
+<aside class="speaker-notes"><strong>If challenged:</strong> Yes, this is a Markov model. The point is exactly that it does not generalize — you can trace every decision back to a count. Ask skeptics to compare what the toy produces with what a real system produces on the same prompt and ask what is different and why. That gap is the lesson.</aside>
 </section>
 <section aria-labelledby="slide-2-title" class="slide" data-title="Autoregression">
 <p class="eyebrow">The basic loop</p>
