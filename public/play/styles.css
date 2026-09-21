@@ -285,8 +285,7 @@ body.show-notes .speaker-notes { display: block; }
   backdrop-filter: blur(14px);
 }
 .deck-nav button { width: 44px; height: 44px; padding: 0; font-size: 1.2rem; }
-.progress-track { height: 7px; border-radius: 999px; background: rgba(23,32,51,.12); overflow: hidden; }
-.progress-fill { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .25s ease; }
+
 
 @media (max-width: 900px) {
   body { overflow: auto; }
@@ -344,6 +343,22 @@ p, li { font-size: clamp(1.2rem, 2vw, 1.5rem); }
   font-weight: 700;
   opacity: .75;
   letter-spacing: .04em;
+}
+
+
+/* ── Progressive reveal ── */
+.definition-grid > div,
+.two-column-notes > div,
+.callout,
+.warning-callout,
+.equation-card,
+.step-card {
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.reveal-hidden {
+  opacity: 0 !important;
+  transform: translateY(18px) !important;
+  pointer-events: none;
 }
 
 @media print {

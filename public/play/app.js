@@ -154,8 +154,47 @@ class NGramModel {
 }
 
 const slides = [...document.querySelectorAll('.slide')];
+
+// ── Progressive reveal ────────────────────────────────────────────────────
+// Slides (0-indexed) that use reveal; 0 = title (no items), rest have content
+const REVEAL_SLIDE_INDICES = new Set([1, 2, 3, 4]); // LM today, SP, What we use, Autoregression
+const REVEAL_SELECTOR = '.step-card, .definition-grid > div, .two-column-notes > div, .callout, .warning-callout, .equation-card';
+const revealState = {}; // slideIndex -> count revealed so far
+
+function getRevealItems(idx) {
+  if (!REVEAL_SLIDE_INDICES.has(idx)) return [];
+  return [...slides[idx].querySelectorAll(REVEAL_SELECTOR)];
+}
+
+function applyReveal(idx) {
+  const items = getRevealItems(idx);
+  const n = revealState[idx] ?? 0;
+  items.forEach((el, i) => el.classList.toggle('reveal-hidden', i >= n));
+}
+
+function tryAdvance() {
+  const items = getRevealItems(currentSlide);
+  const n = revealState[currentSlide] ?? 0;
+  if (items.length && n < items.length) {
+    items[n].classList.remove('reveal-hidden');
+    revealState[currentSlide] = n + 1;
+  } else {
+    showSlide(currentSlide + 1);
+  }
+}
+
+function tryRetreat() {
+  const prevIdx = currentSlide - 1;
+  if (prevIdx >= 0) {
+    // Arriving at previous slide: show all its items
+    const items = getRevealItems(prevIdx);
+    revealState[prevIdx] = items.length;
+  }
+  showSlide(prevIdx);
+}
+// ─────────────────────────────────────────────────────────────────────────
+
 const slideCounter = document.getElementById('slideCounter');
-const progressFill = document.getElementById('progressFill');
 const prevButton = document.getElementById('prevButton');
 const nextButton = document.getElementById('nextButton');
 const audienceDock = document.getElementById('audienceDock');
@@ -240,30 +279,30 @@ function showSlide(index) {
   });
   currentSlide = target;
   slideCounter.textContent = `${target + 1} / ${slides.length}`;
-  progressFill.style.width = `${((target + 1) / slides.length) * 100}%`;
   prevButton.disabled = target === 0;
   nextButton.disabled = target === slides.length - 1;
   document.title = `${slides[target].dataset.title} — Training Data Lab`;
   slides[target].scrollTop = 0;
+  applyReveal(target);
   if (exerciseStatusBadge) {
     exerciseStatusBadge.hidden = slides[target].dataset.audienceActivity !== 'live-dataset';
   }
   updateAudienceDock(slides[target]);
 }
 
-prevButton.addEventListener('click', () => showSlide(currentSlide - 1));
-nextButton.addEventListener('click', () => showSlide(currentSlide + 1));
+prevButton.addEventListener('click', () => tryRetreat());
+nextButton.addEventListener('click', () => tryAdvance());
 
 document.addEventListener('keydown', event => {
   const editing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
   if (editing && !['Escape'].includes(event.key)) return;
   if (['ArrowRight', 'PageDown', ' '].includes(event.key)) {
     event.preventDefault();
-    showSlide(currentSlide + 1);
+    tryAdvance();
   }
   if (['ArrowLeft', 'PageUp'].includes(event.key)) {
     event.preventDefault();
-    showSlide(currentSlide - 1);
+    tryRetreat();
   }
   if (event.key === 'Home') showSlide(0);
   if (event.key === 'End') showSlide(slides.length - 1);
@@ -274,7 +313,7 @@ document.addEventListener('touchstart', event => { touchStartX = event.changedTo
 document.addEventListener('touchend', event => {
   if (touchStartX === null) return;
   const delta = event.changedTouches[0].screenX - touchStartX;
-  if (Math.abs(delta) > 70) showSlide(currentSlide + (delta < 0 ? 1 : -1));
+  if (Math.abs(delta) > 70) delta < 0 ? tryAdvance() : tryRetreat();
   touchStartX = null;
 }, { passive: true });
 
