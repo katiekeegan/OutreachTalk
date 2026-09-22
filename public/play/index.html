@@ -13,7 +13,7 @@
 <header aria-label="Presentation controls" class="topbar">
 <div class="brand">
 <span aria-hidden="true" class="brand-mark">∑</span>
-<span>MoMath Talk · Audience Lab</span>
+<span>MoMath Unlimited Talk</span>
 </div>
 <div class="topbar-actions">
 <button aria-pressed="false" class="icon-button" id="notesToggle" title="Toggle presenter notes" type="button">Notes</button>
@@ -40,7 +40,7 @@
   <div class="title-slide-eyebrow">MoMath · Audience Lab</div>
   <h1 id="slide-title-title">Parrots, Probability, and Predictions</h1>
   <p class="title-slide-subtitle">How a Language Model Learns to Talk</p>
-  <p class="title-slide-speaker">Katie Keegan · Emory MLIP</p>
+  <p class="title-slide-speaker">Katie Keegan</p>
 </div>
 </section>
 <section aria-labelledby="slide-pb-title" class="slide" data-title="What comes next?">
@@ -52,12 +52,10 @@
   <button class="pb-choice" data-val="socks">🧦 socks</button>
 </div>
 <div class="callout pb-reveal">
-  <p>You just made a prediction using patterns you've learned. A language model does something surprisingly similar — except it predicts the next tiny piece of language, again and again.</p>
+  <p>You just used patterns from your life and experiences to make a prediction!</p>
 </div>
-<div class="pb-bridge">
-  <div class="reveal-item pb-bridge-card"><strong>🦜 Parrots:</strong> repeating language isn't the same as understanding it</div>
-  <div class="reveal-item pb-bridge-card"><strong>📊 Probability:</strong> "jelly" is more likely, but not guaranteed</div>
-  <div class="reveal-item pb-bridge-card"><strong>🔮 Predictions:</strong> generating text means repeatedly guessing what comes next</div>
+  <div class="callout pb-reveal">
+  <p>A large language model (LLM) like ChatGPT does the same thing.</p>
 </div>
 </section>
 <section aria-labelledby="slide-howknow-title" class="slide" data-title="How did you know?">
@@ -65,17 +63,17 @@
 <h2 id="slide-howknow-title">How did you know?</h2>
 <div class="howknow-layout">
   <div class="reveal-item clue-item">You've heard "peanut butter and jelly" before.</div>
-  <div class="reveal-item clue-item">You noticed a familiar pattern.</div>
+  <div class="reveal-item clue-item">You've noticed a pattern.</div>
   <div class="reveal-item clue-item">You guessed the most likely answer.</div>
-  <div class="reveal-item clue-item">You could still choose something unexpected.</div>
+  <div class="reveal-item clue-item">You could still choose something completely unexpected.</div>
 </div>
 </section>
 <section aria-labelledby="slide-catprob-title" class="slide" data-title="Probability in action">
-<p class="eyebrow">From pattern to prediction</p>
+<p class="eyebrow">Next-word prediction</p>
 <h2 id="slide-catprob-title">The cat sat on the…</h2>
 <div class="howknow-layout">
   <div class="reveal-item cat-prob-block callout">
-    <p class="cat-intro">A language model learns patterns from enormous amounts of text and uses probability to predict what comes next.</p>
+    <p class="cat-intro">A language model learns <strong>patterns</strong> from enormous amounts of text and uses <strong>probability</strong> to predict what comes next.</p>
     <p class="cat-prompt-label">The cat sat on the…</p>
     <div class="cat-bars">
       <div class="cat-bar"><span class="cat-word">mat</span><div class="cat-track"><div class="cat-fill" style="--w:55%"></div></div><span class="cat-pct">55%</span></div>
@@ -85,43 +83,9 @@
     </div>
   </div>
   <div class="reveal-item closing-q callout">
-    <strong>Does the model always pick the highest number?</strong> Not always — sometimes it chooses a less likely option. That's why its writing can be creative, surprising, or occasionally ridiculous.
-    <p class="transition-q"><em>But where do those percentages come from?</em></p>
+    <p class="transition-q"><em>Where do these probabilities come from?</em></p>
   </div>
 </div>
-</section>
-<section aria-labelledby="slide-lm-title" class="slide" data-title="Language models today">
-<p class="eyebrow">Before we simplify</p>
-<h2 id="slide-lm-title">Real language models learn from trillions of words.</h2>
-<div class="definition-grid">
-<div><span>Architecture</span><p>Transformer neural networks with billions of learned parameters — not explicit rules, but compressed statistical patterns across enormous amounts of text.</p></div>
-<div><span>Training</span><p>Predict the next token, repeatedly, across hundreds of billions of examples. Then refine with human feedback to be more helpful and less harmful.</p></div>
-<div><span>Scale</span><p>GPT-4, Gemini, Claude. Trained on books, code, the whole web. The training corpus shapes everything the model can and cannot say.</p></div>
-</div>
-<div class="callout">Every output is downstream of training data. Change the data — its scope, its balance, its gaps — and you change the model's behavior.</div>
-<aside class="speaker-notes"><strong>Framing:</strong> The simplification coming in the next two slides is deliberate. But the stakes here are real. The toy model will make the mechanism visible; the concepts transfer to systems at this scale.</aside>
-</section>
-<section aria-labelledby="slide-sp-title" class="slide" data-title="Stochastic Parrots">
-<p class="eyebrow">Academic context · FAccT 2021</p>
-<h2 id="slide-sp-title">"On the Dangers of Stochastic Parrots"</h2>
-<p class="lede">Bender, Gebru, McMillan-Major, Shmitchell</p>
-<div class="definition-grid">
-<div><span>Bias at scale</span><p>Models trained on internet text inherit and amplify the biases in that data — and at scale those patterns affect millions of people.</p></div>
-<div><span>Cost</span><p>Training very large models consumes enormous energy and financial resources that are unequally distributed.</p></div>
-<div><span>The parrot claim</span><p>Fluent text is not evidence of understanding. A model stitches together statistically plausible sequences without comprehending meaning.</p></div>
-</div>
-<div class="warning-callout"><strong>The controversy:</strong> Google pressured the authors to retract the paper. Lead researcher Timnit Gebru — known for her work on algorithmic bias — was fired. Co-lead Margaret Mitchell was fired shortly after. The case is now a reference point in debates about corporate AI governance and the suppression of safety-critical research. Karen Hao's reporting in MIT Technology Review (April 2021) is the best starting point.</div>
-<aside class="speaker-notes"><strong>For the room:</strong> The parrot claim is contested — critics argue it conflates statistical competence with the absence of something meaningful. What is not contested: the bias-at-scale argument, and the institutional controversy. Both are relevant to what we are about to do: ask an audience to build a dataset.</aside>
-</section>
-<section aria-labelledby="slide-simplification-title" class="slide" data-title="What we are using today">
-<p class="eyebrow">Pedagogical honesty</p>
-<h2 id="slide-simplification-title">Today's model is a word counter, not a neural network.</h2>
-<div class="two-column-notes">
-<div><strong>N-gram model (today)</strong><p>Counts how often each word follows a given sequence. Every probability on screen is a raw count from data you provided. No learned parameters. No embeddings. Fully transparent.</p></div>
-<div><strong>Real LLMs</strong><p>Billions of parameters compress patterns from trillions of words into dense representations. They generalize in ways a word count cannot, and their internals are not directly readable.</p></div>
-</div>
-<div class="callout">It is a window into the logic, not a replica of the thing. Frequency, coverage, representation, context, and temperature all shape real model behavior — they are just harder to see there.</div>
-<aside class="speaker-notes"><strong>If challenged:</strong> Yes, this is a Markov model. The point is exactly that it does not generalize — you can trace every decision back to a count. Ask skeptics to compare what the toy produces with what a real system produces on the same prompt and ask what is different and why. That gap is the lesson.</aside>
 </section>
 <section aria-labelledby="slide-2-title" class="slide" data-title="Autoregression">
 <p class="eyebrow">The basic loop</p>
@@ -319,7 +283,18 @@
 <p aria-live="polite" class="response-line" id="mysteryFeedback">Choose the evidence that best explains the probabilities.</p>
 </div>
 </div>
-
+<section aria-labelledby="slide-sp-title" class="slide" data-title="Stochastic Parrots">
+<p class="eyebrow">Academic context · FAccT 2021</p>
+<h2 id="slide-sp-title">"On the Dangers of Stochastic Parrots"</h2>
+<p class="lede">Bender, Gebru, McMillan-Major, Shmitchell</p>
+<div class="definition-grid">
+<div><span>Bias at scale</span><p>Models trained on internet text inherit and amplify the biases in that data — and at scale those patterns affect millions of people.</p></div>
+<div><span>Cost</span><p>Training very large models consumes enormous energy and financial resources that are unequally distributed.</p></div>
+<div><span>The parrot claim</span><p>Fluent text is not evidence of understanding. A model stitches together statistically plausible sequences without comprehending meaning.</p></div>
+</div>
+<div class="warning-callout"><strong>The controversy:</strong> Google pressured the authors to retract the paper. Lead researcher Timnit Gebru — known for her work on algorithmic bias — was fired. Co-lead Margaret Mitchell was fired shortly after. The case is now a reference point in debates about corporate AI governance and the suppression of safety-critical research. Karen Hao's reporting in MIT Technology Review (April 2021) is the best starting point.</div>
+<aside class="speaker-notes"><strong>For the room:</strong> The parrot claim is contested — critics argue it conflates statistical competence with the absence of something meaningful. What is not contested: the bias-at-scale argument, and the institutional controversy. Both are relevant to what we are about to do: ask an audience to build a dataset.</aside>
+</section>
 
 <aside class="speaker-notes"><strong>Bridge to the capstone:</strong> Once the audience identifies the likely source data, tell them they now get to create a dataset themselves and inspect the prediction it produces.</aside>
 </section><section aria-labelledby="slide-10-title" class="slide capstone-slide" data-audience-activity="live-dataset" data-audience-label="Build the final training dataset" data-title="Audience capstone">
