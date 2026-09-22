@@ -157,7 +157,7 @@ const slides = [...document.querySelectorAll('.slide')];
 
 // ── Progressive reveal ────────────────────────────────────────────────────
 // Slides (0-indexed) that use reveal; 0 = title (no items), rest have content
-const REVEAL_SLIDE_INDICES = new Set([1, 2, 3, 4, 5, 6, 7]); // What comes next, How did you know, Probability in action, LM today, SP, What we use, Autoregression
+const REVEAL_SLIDE_INDICES = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]); // What comes next, How did you know, Probability in action, LM today, SP, What we use, Parroting vs Understanding, Autoregression, Product symbol
 const REVEAL_SELECTOR = '.step-card, .definition-grid > div, .two-column-notes > div, .callout, .warning-callout, .equation-card, .reveal-item';
 const revealState = {}; // slideIndex -> count revealed so far
 
