@@ -157,8 +157,8 @@ const slides = [...document.querySelectorAll('.slide')];
 
 // ── Progressive reveal ────────────────────────────────────────────────────
 // Slides (0-indexed) that use reveal; 0 = title (no items), rest have content
-const REVEAL_SLIDE_INDICES = new Set([1, 2, 3, 4]); // LM today, SP, What we use, Autoregression
-const REVEAL_SELECTOR = '.step-card, .definition-grid > div, .two-column-notes > div, .callout, .warning-callout, .equation-card';
+const REVEAL_SLIDE_INDICES = new Set([1, 2, 3, 4, 5, 6]); // What comes next, How did you know, LM today, SP, What we use, Autoregression
+const REVEAL_SELECTOR = '.step-card, .definition-grid > div, .two-column-notes > div, .callout, .warning-callout, .equation-card, .reveal-item';
 const revealState = {}; // slideIndex -> count revealed so far
 
 function getRevealItems(idx) {
@@ -649,3 +649,11 @@ renderFrequency();
 renderRepresentation();
 renderWorld('geometry');
 renderSamples();
+
+// Peanut-butter choice buttons — highlight selection
+document.querySelectorAll('.pb-choice').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pb-choice').forEach(b => b.classList.remove('pb-selected'));
+    btn.classList.add('pb-selected');
+  });
+});
